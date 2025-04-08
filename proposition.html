@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语义学 04: 命题逻辑</title>
+    <script src="https://cdn.tailwindcss.com/3.0.0"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // 深色/浅色模式切换
+        function setupTheme() {
+            const userPref = window.matchMedia('(prefers-color-scheme: dark)');
+            const currentTheme = localStorage.getItem('theme');
+            
+            if (currentTheme === 'dark' || (!currentTheme && userPref.matches)) {
+                document.documentElement.classList.add('dark');
+            }
+            
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    }
+                });
+            }
+        }
+        
+        // 页面加载时设置主题
+        document.addEventListener('DOMContentLoaded', setupTheme);
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-200">
+    <header class="bg-white dark:bg-gray-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4 md:py-6">
+                <div class="flex items-center flex-shrink-0 text-white mr-6">
+                    <span class="font-semibold text-xl tracking-tight">语义学 04: 命题逻辑</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block">
+                        <div class="flex items-center ml-4">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                程航
+                            </span>
+                            <span class="ml-1 text-sm font-medium text-gray-500 dark:text-gray-400">
+                                2025年4月1日
+                            </span>
+                        </div>
+                    </div>
+                    <div class="md:hidden">
+                        <button id="theme-toggle" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                            <i class="fas fa-adjust"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">目录</h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+                            <span class="text-blue-500 mr-3"><i class="fas fa-circle text-xs"></i></span>
+                            有效推理模式
+                        </li>
+                        <li class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+                            <span class="text-blue-500 mr-3"><i class="fas fa-circle text-xs"></i></span>
+                            命题逻辑
+                        </li>
+                        <li class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+                            <span class="text-blue-500 mr-3"><i class="fas fa-circle text-xs"></i></span>
+                            逻辑等价性
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">有效推理模式</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-600 dark:text-gray-400">
+                                        (1) 约翰杀死了黄蜂。<br>
+                                        因此，黄蜂死了。
+                                    </p>
+                                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        这种推理取决于动词的含义，而不是逻辑词。
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 mt-2">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">T</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-600 dark:text-gray-400">
+                                        (2) 约翰是律师。<br>
+                                        约翰是诚实的。<br>
+                                        因此，有些（至少一个）律师是诚实的。
+                                    </p>
+                                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        这种推理取决于动词的含义，而不是逻辑词。
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 mt-2">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">T</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-600 dark:text-gray-400">
+                                        (3) 所有人都是凡人。<br>
+                                        苏格拉底是人。<br>
+                                        因此，苏格拉底是凡人。
+                                    </p>
+                                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        <strong>三段论:</strong> 大前提 + 小前提 + 结论
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 mt-2">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">T</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-600 dark:text-gray-400">
+                                        (4) 要么约翰吃了苹果，要么比尔吃了苹果。<br>
+                                        约翰没有吃苹果。<br>
+                                        因此，比尔吃了苹果。
+                                    </p>
+                                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        这些推理取决于"逻辑词"（例如，和、或等）的含义，而不是"内容词"的含义。
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 mt-2">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">T</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">有效推理模式</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-600 dark:text-gray-400">
+                                        (5) 前提1: 所有鱼都是冷血动物。<br>
+                                        前提2: 猴子不是鱼。<br>
+                                        结论: 猴子不是冷血动物。
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 mt-2">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">T</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-600 dark:text-gray-400">
+                                        (6) 前提1: 所有鱼都是冷血动物。<br>
+                                        前提2: 蛇不是鱼。<br>
+                                        结论: 蛇不是冷血动物。
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 mt-2">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">F</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <p class="text-gray-600 dark:text-gray-400">
+                                (5) 和 (6) 使用相同的逻辑，但结果不同。(5) 是真的而 (6) 是假的。<strong>为什么？</strong>
+                            </p>
+                            <p class="mt-2 text-blue-600 dark:text-blue-400">
+                                无效推理 + 真前提 ⇒ 无保证
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">有效推理模式</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <p class="text-gray-600 dark:text-gray-400">
+                                (7) 前提1: 所有鸟都会飞。<br>
+                                前提2: 豹子不会飞。<br>
+                                结论: 豹子不是鸟。
+                            </p>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <p class="text-gray-600 dark:text-gray-400">
+                                逻辑提供了一种分析非常复杂论证的方法，这些论证的直觉判断可能不可靠。
+                            </p>
+                            <p class="mt-2 text-gray-600 dark:text-gray-400">
+                                我们的直觉推理有时可能基于实际上无效的推理模式。但逻辑提供了一种客观的方法来区分有效和无效的推理模式。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">命题逻辑</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">连接词</h3>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                    <li>否定: ¬</li>
+                                    <li>合取: ∧</li>
+                                    <li>析取: ∨</li>
+                                    <li>条件: →</li>
+                                    <li>等价/双条件: ↔</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    p: 安娜微笑。<br>
+                                    q: 辛迪哭泣。
+                                </p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                    <li>¬p: 安娜不微笑。</li>
+                                    <li>p∧q: 安娜微笑并且辛迪哭泣。</li>
+                                    <li>p∨q: 安娜微笑或者辛迪哭泣。</li>
+                                    <li>p→q: 如果安娜微笑，那么辛迪哭泣。</li>
+                                    <li>p↔q: 安娜微笑当且仅当辛迪哭泣。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">真值表</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-900">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">p</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">q</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">p∨q</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">p∧q</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">p→q</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">p↔q</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tr>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">0</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                    <td class="px-4 py-2 text-sm">1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">更复杂的逻辑公式</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    (11) 要么你将通过考试，要么你将不会通过考试。
+                                </p>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    p∨¬p
+                                </p>
+                                
+                                <div class="mt-4">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">步骤 1:</span>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">步骤 2:</span>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">步骤 3:</span>
+                                    </div>
+                                    
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                            <thead class="bg-gray-50 dark:bg-gray-900">
+                                                <tr>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">p</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">¬p</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">p∨¬p</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                                <tr>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">更复杂的逻辑公式</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    ((p∨q)∧¬p)→q
+                                </p>
+                                
+                                <div class="mt-4">
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                            <thead class="bg-gray-50 dark:bg-gray-900">
+                                                <tr>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">1</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">2</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">3</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">4</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">5</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">6</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                                <tr>
+                                                    <td class="px-4 py-2 text-sm">p</td>
+                                                    <td class="px-4 py-2 text-sm">q</td>
+                                                    <td class="px-4 py-2 text-sm">p∨q</td>
+                                                    <td class="px-4 py-2 text-sm">¬p</td>
+                                                    <td class="px-4 py-2 text-sm">(p∨q)∧¬p</td>
+                                                    <td class="px-4 py-2 text-sm">((p∨q)∧¬p)→q</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                    <td class="px-4 py-2 text-sm">0</td>
+                                                    <td class="px-4 py-2 text-sm">1</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">真理的逻辑</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">(12) 三段论</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    如果约翰是爱沙尼亚人，他会喜欢这本书。 p→q<br>
+                                    约翰是爱沙尼亚人。 p<br>
+                                    他会喜欢这本书。 q
+                                </p>
+                                <p class="text-gray-600 dark:text-gray-400 mt-2">
+                                    ((p→q)∧p)→q
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">(13) 假言推理（拒绝/否定方法）</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    如果海豚是鱼，它们是冷血动物。 p→q<br>
+                                    海豚不是冷血动物。 ¬q<br>
+                                    海豚不是鱼。 ¬p
+                                </p>
+                                <p class="text-gray-600 dark:text-gray-400 mt-2">
+                                    ((p→q)∧¬q)→¬p
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">逻辑等价性</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">双重否定消去</h3>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                    <li>¬¬p = p</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">分配律</h3>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                    <li>p∧(q∨r) = (p∧q)∨(p∧r)</li>
+                                    <li>p∨(q∧r) = (p∨q)∧(p∨r)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">结合律</h3>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                    <li>(p∧q)∧r = p∧(q∧r)</li>
+                                    <li>(p∨q)∨r = p∨(q∨r)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">德摩根定律</h3>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                    <li>¬(p∧q) = ¬p∨¬q</li>
+                                    <li>¬(p∨q) = ¬p∧¬q</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">实质条件句的可消去性</h3>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                    <li>p→q = ¬p∨q</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-8 sm:p-10">
+                    <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-6">逻辑等价性</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">练习:</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    证明: (p∧q)→r = p→(q→r)
+                                </p>
+                                
+                                <div class="mt-4">
+                                    <div class="space-y-2">
+                                        <p class="text-gray-600 dark:text-gray-400">(p∧q)→r = ¬(p∧q)∨r</p>
+                                        <p class="text-gray-600 dark:text-gray-400">= (¬p∨¬q)∨r</p>
+                                        <p class="text-gray-600 dark:text-gray-400">= ¬p∨(¬q∨r)</p>
+                                        <p class="text-gray-600 dark:text-gray-400">= p→(¬q∨r)</p>
+                                        <p class="text-gray-600 dark:text-gray-400">= p→(q→r)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        © 2025 程航. 保留所有权利.
+                    </p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 添加滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.bg-white, .bg-gray-50');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
